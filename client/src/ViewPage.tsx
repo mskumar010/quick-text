@@ -34,7 +34,7 @@ export default function ViewPage() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get('http://localhost:9090/view')
+    axios.get('https://share-text-1wmi.onrender.com/view')
       .then((res) => {
         const msg = res.data;
         setMessage(msg);
@@ -282,4 +282,5 @@ export default function ViewPage() {
 			</main>
 		</div>
 	);
+
 }
