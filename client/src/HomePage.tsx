@@ -8,7 +8,9 @@ export default function HomePage() {
 	const [messageSent, setMessageSent] = useState(false);
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
-const SERVER_URL='https://share-text-1wmi.onrender.com'
+	const SERVER_URL = 'https://share-text-1wmi.onrender.com';
+	const CLIENT_URL = 'https://share-txt-skm.vercel.app';
+
 	useEffect(() => {
 		if (isDarkMode) {
 			document.body.classList.add('dark-mode');
@@ -19,7 +21,7 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 
 	const idRef = useRef(crypto.randomUUID().slice(0, 4));
 	const id = idRef.current;
-	const { uid, setUid } = useUid() ?? { uid: '', setUid: () => {} };
+	const { uid, setUid, setSentNewMessage } = useUid() ?? { uid: '', setUid: () => {}, setSentNewMessage: () => {} };
 
 	useEffect(() => {
 		setUid(id);
@@ -40,6 +42,7 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 			});
 			console.log('POST:', res.data);
 			setMessageSent(true);
+			setSentNewMessage(true)
 		} catch (error) {
 			console.error('Error sending message:', error);
 		} finally {
@@ -65,8 +68,7 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 			<header className="header">
 				<div className="container">
 					<div className="header-inner">
-						
-						<a href="https://share-txt-skm.vercel.app/">
+						<a href="https://share-txt-skm.vercel.app/" className="brand">
 							<div className="brand">
 								<div className="brand-icon">
 									<svg
@@ -218,7 +220,7 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 												<span>Shareable Link</span>
 											</div>
 											<div className="link-display">
-												`https://share-txt-skm.vercel.app/view/{uid}`
+												https://share-txt-skm.vercel.app/view/{uid}
 											</div>
 											<button className="btn-copy">
 												<svg
@@ -260,9 +262,7 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 											</div>
 											<div className="qr-container">
 												<img
-													src={generateQRCode(
-														`${SERVER_URL}/${uid}`
-													)}
+													src={generateQRCode(`${CLIENT_URL}/${uid}`)}
 													alt="QR Code"
 													className="qr-image"
 												/>
@@ -325,5 +325,3 @@ const SERVER_URL='https://share-text-1wmi.onrender.com'
 		</div>
 	);
 }
-
-
