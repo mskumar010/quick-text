@@ -266,7 +266,7 @@ export default function ViewPage() {
 						{/* Left - Message */}
 						<div className="message-section">
 							<div className="section-header">
-								<h1 className="page-title">Shared Message</h1>
+								<h1 className="page-title">Shared Message - Just Relaod</h1>
 								<p className="page-subtitle">View and copy the message</p>
 							</div>
 
