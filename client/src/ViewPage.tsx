@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './globalStyles.css';
 import { useParams } from 'react-router';
+import { useUid } from './IdContext';
 
 interface HistoryItem {
 	message: string;
@@ -20,8 +21,13 @@ export default function ViewPage() {
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const [history, setHistory] = useState<HistoryItem[]>([]);
+	const [fetchTrigger, setFetchTrigger] = useState(0);
 	const { uid } = useParams<{ uid: string }>();
 	const abortControllerRef = useRef<AbortController | null>(null);
+	const { sentNewMessage, setSentNewMessage } = useUid() ?? {
+		sentNewMessage: false,
+		setSentNewMessage: () => {},
+	};
 
 	useEffect(() => {
 		if (isDarkMode) {
@@ -30,6 +36,18 @@ export default function ViewPage() {
 			document.body.classList.remove('dark-mode');
 		}
 	}, [isDarkMode]);
+
+	// Trigger refetch when new message is sent
+	useEffect(() => {
+		if (sentNewMessage && uid) {
+			console.log('New message received, refetching...');
+			setFetchTrigger((prev) => prev + 1);
+			// Reset the flag after triggering refetch
+			if (setSentNewMessage) {
+				setSentNewMessage(false);
+			}
+		}
+	}, [sentNewMessage, uid, setSentNewMessage]);
 
 	useEffect(() => {
 		if (!uid) {
@@ -69,7 +87,7 @@ export default function ViewPage() {
 			setMessage('');
 			return;
 		}
-		console.log('UID from URL:', uid);
+		console.log('UID from URL:', uid, 'Fetch trigger:', fetchTrigger);
 
 		if (abortControllerRef.current) {
 			abortControllerRef.current.abort();
@@ -187,12 +205,16 @@ export default function ViewPage() {
 				abortControllerRef.current.abort();
 			}
 		};
-	}, [uid]);
+	}, [uid, fetchTrigger]);
 
 	const handleCopy = async () => {
 		await navigator.clipboard.writeText(message);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 2000);
+	};
+
+	const handleRefresh = () => {
+		setFetchTrigger((prev) => prev + 1);
 	};
 
 	const handleCopyHistory = async (
@@ -230,20 +252,22 @@ export default function ViewPage() {
 							Back
 						</a> */}
 
-						<div className="brand">
-							<div className="brand-icon">
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2">
-									<path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" />
-								</svg>
+						<a href="https://share-txt-skm.vercel.app/" className="brand">
+							<div className="brand">
+								<div className="brand-icon">
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2">
+										<path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" />
+									</svg>
+								</div>
+								<span className="brand-name">ShareText</span>
 							</div>
-							<span className="brand-name">ShareText</span>
-						</div>
+						</a>
 
 						<button
 							className="theme-toggle"
@@ -266,7 +290,7 @@ export default function ViewPage() {
 						{/* Left - Message */}
 						<div className="message-section">
 							<div className="section-header">
-								<h1 className="page-title">Shared Message - Just Relaod</h1>
+								<h1 className="page-title">Shared Message</h1>
 								<p className="page-subtitle">View and copy the message</p>
 							</div>
 
@@ -291,11 +315,26 @@ export default function ViewPage() {
 											<span>Retrieved</span>
 										</div>
 
-										<button
-											className={`btn-copy-small ${copied ? 'copied' : ''}`}
-											onClick={handleCopy}>
-											{copied ? (
-												<>
+										<div
+											style={{
+												display: 'flex',
+												gap: '8px',
+												alignItems: 'center',
+											}}>
+											<button
+												className="btn-refresh"
+												onClick={handleRefresh}
+												disabled={isLoading}
+												title="Refresh message">
+												{isLoading ? (
+													<span
+														className="spinner"
+														style={{
+															width: '14px',
+															height: '14px',
+															borderWidth: '2px',
+														}}></span>
+												) : (
 													<svg
 														width="14"
 														height="14"
@@ -303,33 +342,53 @@ export default function ViewPage() {
 														fill="none"
 														stroke="currentColor"
 														strokeWidth="2">
-														<polyline points="20 6 9 17 4 12" />
+														<polyline points="23 4 23 10 17 10" />
+														<polyline points="1 20 1 14 7 14" />
+														<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
 													</svg>
-													Copied
-												</>
-											) : (
-												<>
-													<svg
-														width="14"
-														height="14"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														strokeWidth="2">
-														<rect
-															x="9"
-															y="9"
-															width="13"
-															height="13"
-															rx="2"
-															ry="2"
-														/>
-														<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-													</svg>
-													Copy
-												</>
-											)}
-										</button>
+												)}
+											</button>
+
+											<button
+												className={`btn-copy-small ${copied ? 'copied' : ''}`}
+												onClick={handleCopy}>
+												{copied ? (
+													<>
+														<svg
+															width="14"
+															height="14"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2">
+															<polyline points="20 6 9 17 4 12" />
+														</svg>
+														Copied
+													</>
+												) : (
+													<>
+														<svg
+															width="14"
+															height="14"
+															viewBox="0 0 24 24"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="2">
+															<rect
+																x="9"
+																y="9"
+																width="13"
+																height="13"
+																rx="2"
+																ry="2"
+															/>
+															<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+														</svg>
+														Copy
+													</>
+												)}
+											</button>
+										</div>
 									</div>
 
 									<div className="message-display">
