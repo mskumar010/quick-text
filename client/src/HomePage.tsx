@@ -8,7 +8,7 @@ export default function HomePage() {
 	const [messageSent, setMessageSent] = useState(false);
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
-
+const SERVER_URL='https://share-text-1wmi.onrender.com'
 	useEffect(() => {
 		if (isDarkMode) {
 			document.body.classList.add('dark-mode');
@@ -34,7 +34,7 @@ export default function HomePage() {
 		setIsLoading(true);
 
 		try {
-			const res = await axios.post('http://localhost:9090', {
+			const res = await axios.post(SERVER_URL, {
 				message: msg,
 				id: uid,
 			});
@@ -258,7 +258,7 @@ export default function HomePage() {
 											<div className="qr-container">
 												<img
 													src={generateQRCode(
-														`https://share-txt-skm.vercel.app/view/${uid}`
+														`${SERVER_URL}/${uid}`
 													)}
 													alt="QR Code"
 													className="qr-image"
@@ -322,3 +322,4 @@ export default function HomePage() {
 		</div>
 	);
 }
+
