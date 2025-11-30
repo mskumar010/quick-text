@@ -9,8 +9,7 @@ export default function HomePage() {
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const SERVER_URL = 'https://share-text-1wmi.onrender.com';
-	const CLIENT_URL = 'https://share-txt-skm.vercel.app';
-
+	// const CLIENT_URL = 'https://share-txt-skm.vercel.app';
 	useEffect(() => {
 		if (isDarkMode) {
 			document.body.classList.add('dark-mode');
@@ -55,6 +54,7 @@ export default function HomePage() {
 		sendMessage(messageInput);
 		setMessageInput('');
 	};
+const sharableLink = `https://share-txt-skm.vercel.app/view/${uid}`;
 
 	const generateQRCode = (text: string): string => {
 		return `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
@@ -220,7 +220,7 @@ export default function HomePage() {
 												<span>Shareable Link</span>
 											</div>
 											<div className="link-display">
-												https://share-txt-skm.vercel.app/view/{uid}
+												{sharableLink}
 											</div>
 											<button className="btn-copy">
 												<svg
@@ -262,7 +262,7 @@ export default function HomePage() {
 											</div>
 											<div className="qr-container">
 												<img
-													src={generateQRCode(`${CLIENT_URL}/view/${uid}`)}
+													src={generateQRCode(sharableLink)}
 													alt="QR Code"
 													className="qr-image"
 												/>
