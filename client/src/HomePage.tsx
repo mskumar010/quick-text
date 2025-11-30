@@ -273,7 +273,7 @@ export default function HomePage() {
 											</div>
 											<div className="qr-container">
 												<img
-													src={generateQRCode(`textshare.app/${uniqueId}`)}
+													src={generateQRCode(`https://share-txt-skm.vercel.app/`)}
 													alt="QR Code"
 													className="qr-image"
 												/>
@@ -333,5 +333,6 @@ export default function HomePage() {
 		</div>
 	);
 }
+
 
 
