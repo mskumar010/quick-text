@@ -9,7 +9,7 @@ export default function HomePage() {
 	const [isDarkMode, setIsDarkMode] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const SERVER_URL = 'https://share-text-1wmi.onrender.com';
-	const CLIENT_URL = 'https://share-txt-skm.vercel.app';
+	// const CLIENT_URL = 'https://share-txt-skm.vercel.app';
 	useEffect(() => {
 		if (isDarkMode) {
 			document.body.classList.add('dark-mode');
