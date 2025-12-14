@@ -1,0 +1,14 @@
+{
+  "name": "quick-text",
+  "version": "1.0.0",
+  "description": "Quick Text - Real-time text sharing",
+  "scripts": {
+    "build": "npm install --prefix client && npm run build --prefix client && npm install --prefix server",
+    "start": "npm start --prefix server"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
