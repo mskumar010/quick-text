@@ -8,7 +8,7 @@ Quick Text is a real-time text sharing application. It allows users to instantly
 - Simple and fast interface.
 - Client-side routing for viewing messages.
 
-## Tech Stack
+## Tech Stack 
 
 - **Frontend**: React, Vite
 - **Backend**: Node.js, Express, Socket.io (if used, else logic is in place for future)
@@ -45,3 +45,4 @@ This project is configured for deployment on Render.
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
