@@ -1,4 +1,4 @@
-# Quick Text (formerly ShareText)
+# Quick Text 
 
 Quick Text is a real-time text sharing application. It allows users to instantly share and view text snippets across devices.
 
@@ -45,4 +45,5 @@ This project is configured for deployment on Render.
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
 
